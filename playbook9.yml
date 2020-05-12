@@ -1,0 +1,21 @@
+---
+  - name: Install Apache and Upload my WebPage
+    hosts: all
+    become: yes
+
+    tasks:
+
+      - name: Reboot servers
+        shell: sleep 3 && reboot now
+        async: 1
+        poll: 0
+        run_once: true 
+
+      - name: Wait till my server will come up online
+        wait_for:
+            host: "{{ inventory_hostname}}"
+            state: started
+            delay: 5
+            timeout: 40
+        delegate_to: 127.0.0.1    
+            

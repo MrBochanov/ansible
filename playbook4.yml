@@ -1,0 +1,21 @@
+---
+  - name: Show distributive
+    hosts: all
+    become: yes
+
+    vars:
+       message1: Privet
+       message2: Kak Dela
+
+    tasks:
+      - name: Show it!
+        debug:
+          var: ansible_distribution
+
+      - name: Collect Uptime 
+        shell:    uptime
+        register: results
+        
+      - name: Show Uptime
+        debug:
+            var: results.stdout  

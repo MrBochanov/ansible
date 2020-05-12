@@ -1,0 +1,76 @@
+---
+  - name: Install Apache and Upload my WebPage
+    hosts: all
+    become: yes
+
+    vars:
+       source_folder: ./MyWebSite
+       destin_folder: /var/www/html
+
+    tasks:
+
+      - name: Show LINUX Version
+        debug: var=ansible_os_family
+
+      - block: #=====BLOCK FOR REDHAT=====
+
+          - name: Install Apache WebServer for Redhat
+            yum: name=httpd state=latest
+           
+          - name: Start Apache and Enable it for RedHat
+            service: name=httpd state=started enabled=yes
+        when: ansible_os_family == "Redhat"
+        
+      - block: #=====BLOCK FOR DEBIAN=====
+
+           - name: Install Apache WebServer for Debian
+             apt: name=apache2 state=latest
+             
+           - name: Start Apache and Enable it for Debian
+             service: name=apache2 state=started enabled=yes
+        when: ansible_os_family == "Debian"
+
+      - name: Generate INDEX.HTML file
+        template: src={{ source_folder }}/index.j2 dest={{ destin_folder}}/index.html mode=0555
+        notify:
+            - Restart Apache RedHat
+            - Restart Apache Debian
+
+        
+
+
+      - name: Copy MyHomePage to Servers
+        copy: src={{ source_folder }}/{{ item }} dest={{ destin_folder }}/{{ item }} mode=0555
+        #with_fileglob: " {{ source_folder }}/*.*"
+        loop:
+            #- "index.html"
+            - "css/"
+            - "css/stylesheet.css"
+            - "css/.DS_Store"
+            - "images/"
+            - "images/background.jpg"
+            - "images/logo.gif"
+            - "images/Untitled-4.png"
+            - "images/.DS_Store"
+        notify: 
+            - Restart Apache RedHat
+            - Restart Apache Debian
+        
+      #- name: Synchronize MyHomePage to Servers
+      #  synchronize: src={{ source_folder }} dest={{ destin_folder }} #mode=0555
+      #  notify:
+      #      - Restart Apache RedHat
+      #      - Restart Apache Debian
+
+
+
+    handlers:
+      - name: Restart Apache RedHat
+        service: name=httpd state=restarted
+        when: ansible_os_family == "Redhat"
+
+      - name: Restart Apache Debian        
+        service: name=apache2 state=restarted
+        when: ansible_os_family == "Debian"
+
+

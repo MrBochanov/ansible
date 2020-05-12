@@ -1,0 +1,15 @@
+[staging_ws]
+ubuntu_ws    ansible_host=192.168.137.131
+#ubuntu_ws    ansible_host=192.168.137.131 ansible_user=mrbochanov ansible_ssh_private_key_file=/home/mrbochanov/.ssh/id_rsa
+
+[staging_serv]
+ubuntu_serv  ansible_host=192.168.137.130
+#ubuntu_serv  ansible_host=192.168.137.130 ansible_user=mrbochanov ansible_ssh_private_key_file=/home/mrbochanov/.ssh/id_rsa
+
+[staging_all]
+ubuntu_ws
+ubuntu_serv
+
+#[staging_all:vars]
+#ansible_user=mrbochanov 
+#ansible_ssh_private_key_file=/home/mrbochanov/.ssh/id_rsa
