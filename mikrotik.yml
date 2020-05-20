@@ -1,4 +1,4 @@
-# Пример Ansible playbook для настройки Mikritik
+# Пример Ansible playbook для настройки Mikrotik
 
 # Для playbook необходимо задать в /etc/ansible/hostst группу: [mikrotik_ovpn_pki]
 # test1 ansible_ssh_port=22 ansible_ssh_user=admin ansible_ssh_pass=PassWord123 ansible_ssh_host=172.20.78.3
